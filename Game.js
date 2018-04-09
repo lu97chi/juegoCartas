@@ -19,6 +19,7 @@ total = {
     player4: 0
 }
 let i, j = 1;
+let auxHand = 0;
 let player1, player2, player3, player4;
 let card1, card2, card3, card4;
 let cards = [];
@@ -36,20 +37,18 @@ let gameStarted = false;
 let ready = false;
 function keyDownHandler(e) {
     if (e.keyCode == 39) {
-            canvas.classList.add('flipInY')
-            setTimeout(() => {
-                canvas.classList.remove('flipInY')
-                ready = true;
-            }, 1000);
-            turn += 1;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawPlayers();
-            drawCardsBack();
-            drawCardPlaying();
-            drawBoard();
-        
-        
-        if (turn > 10) {
+        canvas.classList.add('flipInY')
+        setTimeout(() => {
+            canvas.classList.remove('flipInY')
+            ready = true;
+        }, 1000);
+        turn += 1;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawPlayers();
+        drawCardsBack();
+        drawCardPlaying();
+        drawBoard();
+        if (turn > 9) {
             restartRound();
         }
 
@@ -73,23 +72,9 @@ function keyDownHandler(e) {
         draw();
         canvas.classList.add('fadeIn')
         setTimeout(() => {
-            canvas.classList.remove('fadeIn') 
+            canvas.classList.remove('fadeIn')
         }, 1000);
     }
-}
-
-
-function drawScore() {
-    ctx.font = "16px Arial";
-    ctx.fillStyle = "#0095DD";
-    ctx.fillText("Score:" + scores.player1, 8, 20);
-    ctx.fillText("Score:" + scores.player4, 700, 20);
-    ctx.fillText("Score:" + scores.player3, 8, 340);
-    ctx.fillText("Score:" + scores.player2, 700, 340);
-    ctx.fillText("Total:" + total.player1, 340, 20);
-    ctx.fillText("Total:" + total.player4, 410, 20);
-    ctx.fillText("Total:" + total.player3, 340, 340);
-    ctx.fillText("Total:" + total.player2, 410, 340);
 }
 
 function loadingScreen() {
@@ -104,39 +89,26 @@ function loadingScreen() {
     background.src = './OnGame/sample.png'
 }
 
+function draw() {
+    drawScore();
+    drawBoard();
+    drawPlayers();
+    drawCardsBack();
+    cardsAssing();
+    drawCardPlaying();
+}
 
-
-function restartRound() {
-    roundsPlayed += 1;
-    if (scores.player1 > scores.player2 && scores.player1 > scores.player3 && scores.player1 > scores.player4) {
-        total.player1 += 1;
-    } else if (scores.player2 > scores.player1 && scores.player2 > scores.player3 && scores.player2 > scores.player4) {
-        total.player2 += 1;
-    } else if (scores.player3 > scores.player1 && scores.player3 > scores.player4 && scores.player3 > scores.player2) {
-        total.player3 += 1;
-    } else if (scores.player4 > scores.player1 && scores.player4 > scores.player3 && scores.player4 > scores.player2) {
-        total.player4 += 1;
-    }
-    scores.player1 = 0;
-    scores.player2 = 0;
-    scores.player3 = 0;
-    scores.player4 = 0;
-    if (roundsPlayed < rounds) {
-        cards = [];
-        deck1 = [];
-        deck2 = [];
-        deck3 = [];
-        deck4 = [];
-        deck1aux = [];
-        deck2aux = [];
-        deck3aux = [];
-        deck4aux = [];
-        turn = -1;
-
-        cardsAssing();
-    } else {
-        alert('Juego Terminado')
-    }
+function drawScore() {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText("Score:" + scores.player1, 8, 20);
+    ctx.fillText("Score:" + scores.player4, 700, 20);
+    ctx.fillText("Score:" + scores.player3, 8, 340);
+    ctx.fillText("Score:" + scores.player2, 700, 340);
+    ctx.fillText("Total:" + total.player1, 340, 20);
+    ctx.fillText("Total:" + total.player4, 410, 20);
+    ctx.fillText("Total:" + total.player3, 340, 340);
+    ctx.fillText("Total:" + total.player2, 410, 340);
 }
 
 function drawBoard() {
@@ -203,7 +175,6 @@ function cardsAssing() {
     let i, j, k;
     let aux = [];
     let aux2 = [];
-
     while (h <= 40) {
         cards.push('./OnGame/' + h + '.png');
         aux.push(h);
@@ -265,6 +236,7 @@ function cardsAssing() {
         }
     }
 }
+
 
 function drawCardPlaying() {
     let auxNumber1, auxNumber2, auxNumber3, auxNumber4;
@@ -381,17 +353,61 @@ function drawCardPlaying() {
     drawScore();
 }
 
-function draw() {
-    drawScore();
-    drawBoard();
-    drawPlayers();
-    drawCardsBack();
-    cardsAssing();
-    drawCardPlaying();
-    console.log(rounds)
+function restartRound() {
+    roundsPlayed += 1;
+    if (scores.player1 >= scores.player2 && scores.player1 >= scores.player3 && scores.player1 >= scores.player4) {
+        total.player1 += 1;
+    } else if (scores.player2 >= scores.player1 && scores.player2 >= scores.player3 && scores.player2 >= scores.player4) {
+        total.player2 += 1;
+    } else if (scores.player3 >= scores.player1 && scores.player3 >= scores.player4 && scores.player3 >= scores.player2) {
+        total.player3 += 1;
+    } else if (scores.player4 >= scores.player1 && scores.player4 >= scores.player3 && scores.player4 >= scores.player2) {
+        total.player4 += 1;
+    }
+    scores.player1 = 0;
+    scores.player2 = 0;
+    scores.player3 = 0;
+    scores.player4 = 0;
+    if (roundsPlayed < rounds) {
+        cards = [];
+        deck1 = [];
+        deck2 = [];
+        deck3 = [];
+        deck4 = [];
+        deck1aux = [];
+        deck2aux = [];
+        deck3aux = [];
+        deck4aux = [];
+        turn = -1;
+        cardsAssing();
+    } else {
+        auxHand++;
+        if (auxHand == 2) {
+            document.removeEventListener("keydown", keyDownHandler);
+            winner = new Image();
+            winner.src = './OnGame/winner.png'
+            if (total.player1 > total.player2 && total.player1 > total.player3 && total.player1 > total.player4) {
+                winner.onload = function () {
+                    ctx.drawImage(winner, 200, 100, 150, 150)
+                }
+            } else if (total.player2 > total.player1 && total.player2 > total.player3 && total.player2 > total.player4) {
+                winner.onload = function () {
+                    ctx.drawImage(winner, 500, 400, 150, 150)
+
+                }
+            } else if (total.player3 > total.player1 && total.player3 > total.player4 && total.player3 > total.player2) {
+                winner.onload = function () {
+                    ctx.drawImage(winner, 200, 400, 150, 150)
+                }
+            } else if (total.player4 > total.player1 && total.player4 > total.player3 && total.player4 > total.player2) {
+                winner.onload = function () {
+                    ctx.drawImage(winner, 500, 100, 150, 150)
+                }
+            }
+        }
+
+
+    }
 }
-
-
-
 
 loadingScreen();
