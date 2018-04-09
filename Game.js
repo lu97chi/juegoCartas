@@ -12,13 +12,14 @@ scores = {
     player3: 0,
     player4: 0
 }
+scoresArr = [0, 0, 0, 0]
 total = {
     player1: 0,
     player2: 0,
     player3: 0,
     player4: 0
 }
-let i, j = 1;
+// let i, j = 1;
 let auxHand = 0;
 let player1, player2, player3, player4;
 let card1, card2, card3, card4;
@@ -31,25 +32,28 @@ let deck1aux = [];
 let deck2aux = [];
 let deck3aux = [];
 let deck4aux = [];
-let rounds = 0;
+let rounds = 1;
 let roundsPlayed = 0;
 let gameStarted = false;
 let ready = false;
+
 function keyDownHandler(e) {
     if (e.keyCode == 39) {
-        canvas.classList.add('flipInY')
-        setTimeout(() => {
-            canvas.classList.remove('flipInY')
-            ready = true;
-        }, 1000);
-        turn += 1;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawPlayers();
-        drawCardsBack();
-        drawCardPlaying();
-        drawBoard();
-        if (turn > 9) {
-            restartRound();
+        if (gameStarted) {
+            canvas.classList.add('flipInY')
+            setTimeout(() => {
+                canvas.classList.remove('flipInY')
+                ready = true;
+            }, 1000);
+            turn += 1;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPlayers();
+            drawCardsBack();
+            drawCardPlaying();
+            drawBoard();
+            if (turn > 9) {
+                restartRound();
+            }
         }
 
     }
@@ -59,7 +63,7 @@ function keyDownHandler(e) {
             loadingScreen();
         }
         if (e.keyCode == 40) {
-            if (rounds > 0) {
+            if (rounds > 1) {
                 rounds -= 1;
             }
             loadingScreen();
@@ -293,28 +297,36 @@ function drawCardPlaying() {
             if (auxNumber1 == auxNumber3) {
                 if (deck1[turn] > deck3[turn]) {
                     scores.player1 += 1;
+                    scoresArr[0] += 1;
                 } else {
                     scores.player3 += 1;
+                    scoresArr[2] += 1;
                 }
             } else {
                 if (auxNumber1 > auxNumber3) {
                     scores.player1 += 1;
+                    scoresArr[0] += 1;
                 } else {
                     scores.player3 += 1;
+                    scoresArr[2] += 1;
                 }
             }
         } else {
             if (auxNumber1 == auxNumber4) {
                 if (deck1[turn] > deck4[turn]) {
                     scores.player1 += 1;
+                    scoresArr[0] += 1;
                 } else {
                     scores.player4 += 1;
+                    scoresArr[3] += 1;
                 }
             } else {
                 if (auxNumber1 > auxNumber4) {
                     scores.player1 += 1;
+                    scoresArr[0] += 1;
                 } else {
                     scores.player4 += 1;
+                    scoresArr[3] += 1;
                 }
             }
         }
@@ -323,28 +335,36 @@ function drawCardPlaying() {
             if (auxNumber2 == auxNumber3) {
                 if (deck2[turn] > deck3[turn]) {
                     scores.player2 += 1;
+                    scoresArr[1] += 1;
                 } else {
                     scores.player3 += 1;
+                    scoresArr[2] += 1;
                 }
             } else {
                 if (auxNumber2 > auxNumber3) {
                     scores.player2 += 1;
+                    scoresArr[1] += 1;
                 } else {
                     scores.player3 += 1;
+                    scoresArr[2] += 1;
                 }
             }
         } else {
             if (auxNumber2 == auxNumber4) {
                 if (deck2[turn] > deck4[turn]) {
                     scores.player2 += 1;
+                    scoresArr[1] += 1;
                 } else {
                     scores.player4 += 1;
+                    scoresArr[3] += 1;
                 }
             } else {
                 if (auxNumber2 > auxNumber4) {
                     scores.player2 += 1;
+                    scoresArr[1] += 1;
                 } else {
                     scores.player4 += 1;
+                    scoresArr[3] += 1;
                 }
             }
         }
@@ -354,21 +374,72 @@ function drawCardPlaying() {
 }
 
 function restartRound() {
+    let auxTotal1, auxTotal2, auxTotal3, auxTotal4 = 0
     roundsPlayed += 1;
-    if (scores.player1 >= scores.player2 && scores.player1 >= scores.player3 && scores.player1 >= scores.player4) {
-        total.player1 += 1;
-    } else if (scores.player2 >= scores.player1 && scores.player2 >= scores.player3 && scores.player2 >= scores.player4) {
-        total.player2 += 1;
-    } else if (scores.player3 >= scores.player1 && scores.player3 >= scores.player4 && scores.player3 >= scores.player2) {
-        total.player3 += 1;
-    } else if (scores.player4 >= scores.player1 && scores.player4 >= scores.player3 && scores.player4 >= scores.player2) {
-        total.player4 += 1;
-    }
     scores.player1 = 0;
     scores.player2 = 0;
     scores.player3 = 0;
     scores.player4 = 0;
+    if (roundsPlayed <= rounds) {
+        if (scoresArr[0] != scoresArr[1]) {
+            if (scoresArr[0] > scoresArr[1]) {
+                auxTotal1 = 1
+            } else {
+                auxTotal2 = 1
+            }
+        } else {
+            if (Math.random() > 0.50) {
+                auxTotal1 = 1
+            } else {
+                auxTotal2 = 1;
+            }
+        }
+        if (scoresArr[2] != scoresArr[3]) {
+            if (scoresArr[2] > scoresArr[3]) {
+                auxTotal3 = 1
+            } else {
+                auxTotal4 = 1
+            }
+        } else {
+            if (Math.random() > 0.50) {
+                auxTotal3 = 1
+            } else {
+                auxTotal4 = 1;
+            }
+        }
+        if (auxTotal1) {
+            if (auxTotal3) {
+                if (scoresArr[0] > scoresArr[2]) {
+                    total.player1 += 1;
+                } else {
+                    total.player3 += 1;
+                }
+            } else if (auxTotal4) {
+                if (scoresArr[0] > scoresArr[3]) {
+                    total.player1 += 1;
+                } else {
+                    total.player4 += 1;
+                }
+            }
+        }
+        if (auxTotal2) {
+            if (auxTotal3) {
+                if (scoresArr[1] > scoresArr[2]) {
+                    total.player2 += 1;
+                } else {
+                    total.player3 += 1;
+                }
+            } else if (auxTotal4) {
+                if (scoresArr[1] > scoresArr[3]) {
+                    total.player2 += 1;
+                } else {
+                    total.player4 += 1;
+                }
+            }
+        }
+    }
     if (roundsPlayed < rounds) {
+        scoresArr = [0, 0, 0, 0]
         cards = [];
         deck1 = [];
         deck2 = [];
@@ -382,32 +453,89 @@ function restartRound() {
         cardsAssing();
     } else {
         auxHand++;
+        let auxWinner1, auxWinner2, auxWinner3, auxWinner4 = 0
         if (auxHand == 2) {
             document.removeEventListener("keydown", keyDownHandler);
             winner = new Image();
             winner.src = './OnGame/winner.png'
-            if (total.player1 > total.player2 && total.player1 > total.player3 && total.player1 > total.player4) {
-                winner.onload = function () {
-                    ctx.drawImage(winner, 200, 100, 150, 150)
+            if (total.player1 != total.player2) {
+                if (total.player1 > total.player2) {
+                    auxWinner1 = 1;
+                } else {
+                    auxWinner2 = 1;
                 }
-            } else if (total.player2 > total.player1 && total.player2 > total.player3 && total.player2 > total.player4) {
-                winner.onload = function () {
-                    ctx.drawImage(winner, 500, 400, 150, 150)
+            } else {
+                if (Math.random() > 0.50) {
+                    auxWinner1 = 1;
+                } else {
+                    auxWinner2 = 1;
+                }
+            }
 
+            if (total.player3 != total.player4) {
+                if (total.player3 > total.player4) {
+                    auxWinner3 = 1;
+                } else {
+                    auxWinner4 = 1;
                 }
-            } else if (total.player3 > total.player1 && total.player3 > total.player4 && total.player3 > total.player2) {
-                winner.onload = function () {
-                    ctx.drawImage(winner, 200, 400, 150, 150)
+            } else {
+                if (Math.random() > 0.50) {
+                    auxWinner3 = 1;
+                } else {
+                    auxWinner4 = 1;
                 }
-            } else if (total.player4 > total.player1 && total.player4 > total.player3 && total.player4 > total.player2) {
-                winner.onload = function () {
-                    ctx.drawImage(winner, 500, 100, 150, 150)
+            }
+
+            if (auxWinner1) {
+                if (auxWinner3) {
+                    if (total.player1 > total.player3) {
+                        winner.onload = function () {
+                            ctx.drawImage(winner, 200, 100, 150, 150)
+                        }
+                    } else {
+                        winner.onload = function () {
+                            ctx.drawImage(winner, 200, 400, 150, 150)
+                        }
+                    }
+                } else if (auxWinner4) {
+                    if (total.player1 > total.player3) {
+                        winner.onload = function () {
+                            ctx.drawImage(winner, 200, 100, 150, 150)
+                        }
+                    } else {
+                        winner.onload = function () {
+                            ctx.drawImage(winner, 500, 100, 150, 150)
+                        }
+                    }
+                }
+            }
+            if (auxWinner2) {
+                if (auxWinner3) {
+                    if (total.player2 > total.player3) {
+                        winner.onload = function () {
+                            ctx.drawImage(winner, 500, 400, 150, 150)
+
+                        }
+                    } else {
+                        winner.onload = function () {
+                            ctx.drawImage(winner, 200, 400, 150, 150)
+
+                        }
+                    }
+                } else if (auxWinner4) {
+                    if (total.player2 > total.player4[3]) {
+                        winner.onload = function () {
+                            ctx.drawImage(winner, 500, 400, 150, 150)
+
+                        }
+                    } else {
+                        winner.onload = function () {
+                            ctx.drawImage(winner, 500, 100, 150, 150)
+                        }
+                    }
                 }
             }
         }
-
-
     }
 }
-
 loadingScreen();
